@@ -30,13 +30,13 @@ extension String {
     
     
     public func isValidPassword(with constraints: [PasswordConstraint]) -> Bool {
-        matches(
-            to: #"(?=.{6,})"# +
-            (constraints.contains(.atLeast8Characters) ? #"(?=.{8,})"# : "") +
-            (constraints.contains(.atLeastOneUppercaseLetter) ? #"(?=.*[A-Z])"# : "") +
-            (constraints.contains(.atLeastOneLowercaseLetter) ? #"(?=.*[a-z])"# : "") +
-            (constraints.contains(.atLeastOneDigits) ? #"(?=.*\d)"# : "") +
-            (constraints.contains(.atLeastOneSpecialCharacter) ? #"(?=.*[ !$%&?._-])"# : "")
+        let charactersCount = constraints.contains(.atLeast8Characters) ? 8 : 4
+        let uppercase = constraints.contains(.atLeastOneUppercaseLetter) ? #"(?=.*?[A-Z])"# : ""
+        let lowercase = constraints.contains(.atLeastOneLowercaseLetter) ? #"(?=.*?[a-z])"# : ""
+        let digits = constraints.contains(.atLeastOneDigits) ? #"(?=.*?[0-9])"# : ""
+        let specialCharacters = constraints.contains(.atLeastOneSpecialCharacter) ? #"(?=.*?[#?!@$%^&*-.,:/\;€§<>{}'"])"# : ""
+        return matches(
+            to: #"^\#(uppercase)\#(lowercase)\#(digits)\#(specialCharacters).{\#(charactersCount),}$"#
         )
     }
     
