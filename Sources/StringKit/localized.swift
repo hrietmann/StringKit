@@ -20,7 +20,10 @@ extension String {
         let emptyValue = "No value found"
         let mainBundleValue = NSLocalizedString(self, tableName: tableName, bundle: .main, value: emptyValue, comment: "")
         guard mainBundleValue == emptyValue else { return mainBundleValue }
-        return NSLocalizedString(self, tableName: nil, bundle: .module, value: "", comment: "")
+        let anyBundleValue = Bundle.allBundles.lazy
+            .map { NSLocalizedString(self, tableName: nil, bundle: $0, value: emptyValue, comment: "") }
+            .first(where: { $0 != emptyValue })
+        return anyBundleValue ?? NSLocalizedString(self, tableName: nil, bundle: .module, value: emptyValue, comment: "")
     }
     
     
